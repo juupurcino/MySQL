@@ -1,0 +1,29 @@
+#create database db_senai;
+
+use db_senai;
+show databases;
+
+/*create table aluno(
+
+id int not null primary key auto_increment,
+nome varchar(50) not null,
+sobrenome varchar(50) not null
+)default charset utf8*/
+
+/*create table professor(
+
+id int not null primary key auto_increment,
+nome varchar(50) not null,
+sobrenome varchar(50) not null
+)default charset utf8*/
+
+create table turma(
+id int not null primary key auto_increment,
+id_aluno int, 
+id_professor int,
+foreign key (id_aluno) references aluno(id),
+foreign key (id_professor) references professor(id)
+)default charset utf8;
+
+select * from turma;
+show tables;
