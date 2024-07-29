@@ -1,0 +1,31 @@
+create database tb_floricultura;
+
+use tb_floricultura;
+show databases;
+
+create table cliente(
+id int not null primary key auto_increment,
+nome varchar(50) not null,
+sobrenome varchar(50) not null,
+rg int,
+telefone int,
+endereco varchar(200)
+)default charset utf8;
+
+create table produtos(
+id int not null primary key auto_increment,
+nome varchar(50) not null,
+tipo varchar(50) not null,
+preco float,
+quantidade int
+)default charset utf8;
+
+create table compra(
+id int not null primary key auto_increment,
+data_compra datetime,
+total float,
+id_cliente int,
+id_produto int,
+foreign key (id_cliente) references cliente(id),
+foreign key (id_produto) references produtos(id)
+)default charset utf8;
