@@ -1,0 +1,66 @@
+create database tb_oficina;
+use tb_oficina;
+show databases;
+
+create table oficina(
+id int not null primary key auto_increment,
+cnpj int not null,
+nome varchar(50) not null
+)default charset utf8;
+
+create table servico(
+id int not null primary key auto_increment,
+descricao varchar(50) not null,
+preco float not null,
+id_oficina int,
+foreign key (id_oficina) references oficina(id)
+)default charset utf8;
+
+create table cliente(
+id int not null primary key,
+nome varchar(50) not null,
+endereco varchar(50) not null,
+telefone int
+)default charset utf8;
+
+create table juridico(
+id int not null primary key auto_increment,
+cnpj int,
+id_cliente int,
+foreign key (id_cliente) references cliente(id)
+)default charset utf8;
+
+create table fisico(
+id int not null primary key auto_increment,
+cpf int,
+id_cliente int,
+foreign key (id_cliente) references cliente(id)
+)default charset utf8;
+
+create table veiculo(
+id int not null primary key auto_increment,
+marca varchar(50) not null,
+placa varchar(50) not null,
+modelo varchar(50) not null,
+ano int,
+id_cliente int,
+foreign key (id_cliente) references cliente(id)
+)default charset utf8;
+
+create table ordemServico(
+id int not null primary key auto_increment,
+data_entrada datetime,
+data_conclusao datetime,
+status varchar(50) not null,
+observacoes varchar(50) not null,
+id_cliente int,
+id_oficina int,
+id_veiculo int,
+id_servico int,
+foreign key (id_cliente) references cliente(id),
+foreign key (id_oficina) references oficina(id),
+foreign key (id_veiculo) references veiculo(id),
+foreign key (id_servico) references servico(id)
+)default charset utf8;
+
+show tables;
