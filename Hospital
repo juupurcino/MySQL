@@ -1,0 +1,52 @@
+create database tb_medico;
+use tb_medico;
+show databases;
+
+create table medico(
+crm int not null primary key,
+nome varchar(50) not null,
+especialidade varchar(50) not null
+)default charset utf8;
+
+create table paciente(
+id int not null primary key auto_increment,
+nome varchar(50) not null,
+endereco varchar(50)not null,
+idade int
+)default charset utf8;
+
+create table medicamento(
+id int not null primary key auto_increment,
+tipo varchar(50) not null,
+descricao varchar(50)not null
+)default charset utf8;
+
+create table receita(
+id int not null primary key auto_increment,
+crm int,
+id_medicamento int,
+id_paciente int,
+foreign key (crm) references medico(crm),
+foreign key (id_medicamento) references medicamento(id),
+foreign key (id_paciente) references paciente(id)
+)default charset utf8;
+
+create table atendimento(
+id int not null primary key auto_increment,
+crm int,
+id_paciente int,
+foreign key (crm) references medico(crm),
+foreign key (id_paciente) references paciente(id)
+)default charset utf8;
+
+create table exame(
+id int not null primary key auto_increment,
+descricao varchar(50) not null,
+data datetime,
+rm int,
+id_paciente int,
+foreign key (crm) references medico(crm),
+foreign key (id_paciente) references paciente(id)
+)default charset utf8;
+
+show tables;
