@@ -1,0 +1,35 @@
+create database tb_soldado;use tb_soldado;
+show databases;
+
+create table municao(
+id int not null primary key auto_increment,
+tipo varchar(50) not null,
+calibre varchar(50) not null,
+id_arma int,
+foreign key (id_arma) references arma(id)
+)default charset utf8;
+
+create table arma(
+id int not null primary key auto_increment,
+nome varchar(50) not null,
+tipo varchar(50) not null,
+municao varchar(50) not null
+)default charset utf8;
+
+create table soldado(
+rm int not null primary key,
+nome varchar(50) not null,
+data_nascimento datetime,
+id_arma int,
+foreign key (id_arma) references arma(id)
+)default charset utf8;
+
+create table limpeza(
+id int not null primary key auto_increment,
+rm int,
+id_arma int,
+foreign key (rm) references soldado(rm),
+foreign key (id_arma) references arma(id)
+)default charset utf8;
+
+show tables;
