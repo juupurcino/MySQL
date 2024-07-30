@@ -1,0 +1,37 @@
+create database tb_academia;
+use tb_academia;
+show databases;
+
+create table cliente(
+id int not null primary key,
+nome varchar(50) not null,
+instituicao varchar(50) not null,
+idade int not null,
+telefone int not null
+)default charset utf8;
+
+create table professor(
+id int not null primary key auto_increment,
+nome varchar(50) not null,
+sobrenome varchar(50)not null,
+telefone int
+)default charset utf8;
+
+create table sala(
+id int not null primary key auto_increment,
+nome varchar(50) not null,
+capacidade int not null,
+descricao varchar(50)not null
+)default charset utf8;
+
+create table aula(
+id int not null primary key auto_increment,
+nivel_dificuldade int,
+modelidade varchar(50),
+id_sala int,
+id_professor int,
+id_cliente int,
+foreign key (id_sala) references sala(id),
+foreign key (id_professor) references professor(id),
+foreign key (id_cliente) references cliente(id)
+)default charset utf8;
