@@ -1,0 +1,56 @@
+create database tb_transporte;
+use tb_transporte;
+show databases;
+
+create table loja(
+id int not null primary key,
+nome varchar(50) not null,
+endereco varchar(50) not null
+)default charset utf8;
+
+create table armazem(
+id int not null primary key,
+nome varchar(50) not null,
+endereco varchar(50) not null
+)default charset utf8;
+
+create table caminhao(
+id int not null primary key auto_increment,
+capacidade int,
+tipo varchar(50),
+id_loja int,
+foreign key (id_loja) references loja(id)
+)default charset utf8;
+
+create table encomenda(
+id int not null primary key auto_increment,
+peso float,
+data datetime,
+destinho varchar(50),
+id_caminhao int,
+foreign key (id_caminhao) references caminhao(id)
+)default charset utf8;
+
+create table entregar(
+id int not null primary key auto_increment,
+id_loja int,
+id_caminhao int,
+foreign key (id_loja) references loja(id),
+foreign key (id_caminhao) references caminhao(id)
+)default charset utf8;
+
+create table enviar(
+id int not null primary key auto_increment,
+id_armazem int,
+id_caminhao int,
+foreign key (id_armazem) references armazem(id),
+foreign key (id_caminhao) references caminhao(id)
+)default charset utf8;
+
+create table barracao(
+id int not null primary key auto_increment,
+id_armazem int,
+id_loja int,
+foreign key (id_armazem) references armazem(id),
+foreign key (id_loja) references loja(id)
+)default charset utf8;
