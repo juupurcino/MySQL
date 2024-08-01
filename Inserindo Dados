@@ -1,0 +1,41 @@
+use final;
+
+alter table ordemserviço
+add constraint IDCliente foreign key (IDCliente) references cliente(IDCliente);
+
+insert into cliente (nome, telefone, endereço) values
+('João Silva', 123456789, 'Rua A 123 Cidade X'),
+('Maria Oliveira', 987654321, 'Av. B 456 Cidade Y'),
+('Carlos Santos', 456123789, 'Rua C 789 Cidade Z');
+
+insert into veiculo (marca, modelo, ano, placa, IDCliente) values 
+('Ford', 'Fiesta', 2018, 'ABC-1234', 1),
+('Chevrolet', 'Onix', 2020, 'DEF-5678', 1),
+('Volkswagen', 'Gol', 2019, 'GHI-9101', 2),
+('Toyota', 'Corolla', 2021, 'JKL-1122', 3);
+
+ALTER TABLE serviço MODIFY Preço FLOAT NOT NULL;
+
+insert into serviço (Descrição, Preço) values
+('Troca de óleo', 150.00),
+('Troca de pneus', 300.00),
+('Revisão periódica', 200.00),
+('Reparo elétrico', 180.00);
+
+insert into itensserviço (IDServiço, Descrição) values
+(1, 'Troca de óleo'),
+(2, 'Troca de pneus'),
+(3, 'Revisão periódica'),
+(4, 'Reparo elétrico');
+
+insert into ordemserviço (IDCliente, IDVeiculo, DataEntrada, DataConclusao, StatusOrdem, ObservaçõesAdicionais) values 
+(1, 1, '2024-07-15', '2024-07-16', 'Concluída', 'Troca de óleo e filtro'),
+(3, 3, '2024-07-20', '2024-07-22', 'Em andamento', 'Troca de pneus'),
+(1, 2, '2024-07-25', NULL, 'Em andamento', 'Revisão periódica e alinhamento'),
+(2, 4, '2024-07-28', '2024-07-30', 'Concluída', 'Reparo elétrico no painel');
+
+insert into detalheordemitem (IDOrdemServico, IDItemServico, QtdItemUsado) values 
+(1, 1, 5),
+(2, 2, 4),
+(3, 3, 1),
+(4, 4, 2);
