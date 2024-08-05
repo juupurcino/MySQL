@@ -1,0 +1,86 @@
+use filmes;
+
+-- Quais são os estúdios cadastrados no banco de dados?
+
+select nome "Estudios" from tb_estudio;
+
+-- Quantos filmes foram lançados em cada ano?
+
+select count(AnoLancamento) as "Quantidade", AnoLancamento as "Ano Lançamento" from tb_filmes
+group by AnoLancamento;
+
+-- Quais são os atores estrangeiros no banco de dados e quantos são?
+
+select nome, (select count(IDAtor) from tb_atores) as "Quantidade" from tb_atores
+where Nacionalidade != "Americana";
+
+-- Qual é o filme mais recente lançado?
+
+select nome, AnoLancamento as "Ano lançamento" from tb_filmes 
+order by AnoLancamento desc
+limit 1;
+
+-- Quais são os estúdios que tiveram um faturamento superior a 1 milhão no ano anterior?
+
+select nome, FaturamentoAnoAnterior as "Faturamento" from tb_estudio where FaturamentoAnoAnterior > 1000000;
+
+-- Quantos atores têm menos de 30 anos?
+
+select count(IDAtor) as "Quantidade" from tb_atores where Idade < 30;
+
+-- Qual é a média de meses de produção dos filmes?
+
+select avg(Meses) as "Media de meses" from tb_filmes;
+
+-- Qual é o filme em que um ator recebeu o maior cachê?
+
+select tb_atores.Nome, tb_filmes.Nome, tb_papel.CacheAtor 
+from tb_papel
+inner join tb_filmes on tb_filmes.IDFilme = tb_papel.IDFilme
+inner join tb_atores on tb_atores.IDAtor = tb_papel.IDAtor
+order by tb_papel.CacheAtor desc
+limit 1;
+
+-- Quais são os filmes que foram lançados nos últimos 5 anos?
+
+select Nome, AnoLancamento as "Ano lançamento" from tb_filmes where AnoLancamento >= 2019;
+
+-- Qual é o estúdio com a data de fundação mais recente?
+
+select Nome, DataFundacao as "Data de fundação"  from tb_estudio
+order by DataFundacao desc
+limit 1;
+
+-- Quais são os atores que já atuaram em mais de 5 filmes?
+
+select tb_atores.Nome from tb_atores
+inner join tb_papel on tb_papel.IDAtor = tb_atores.IDAtor
+group by IDAtor
+having count(IDFilme) > 5;
+
+-- Qual é o custo médio total dos filmes produzidos por cada estúdio?
+
+select IDEstudio, avg(CustoTotal) as "Custo médio" from tb_filmes
+group by IDEstudio;
+
+-- Quais são os atores brasileiros que têm mais de 40 anos?
+
+select Nome, Idade from tb_atores where Idade > 40;
+
+-- Quais são os filmes e seus custos totais, ordenados pelo custo total em ordem crescente?
+
+select Nome, CustoTotal as "Custo Total" from tb_filmes 
+order by CustoTotal;
+
+-- Quantos atores têm a letra inicial do seu nome entre K e W?
+
+select count(Nome) as "Quantidade" from tb_atores 
+where Nome between "k%" and "w%";
+
+-- Quantos filmes têm custo total entre $100.00 e $500.00?
+
+select count(IDFilme) as Quantidade from tb_filmes where CustoTotal >= 100 and CustoTotal <= 500;
+
+-- Quantos estúdios têm um faturamento no ano anterior superior a $1 milhão e uma data de fundação anterior a 2000?
+
+select count(IDEstudio) from tb_estudio where FaturamentoAnoAnterior > 1000000 and DataFundacao < 2000;
