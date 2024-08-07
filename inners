@@ -97,15 +97,39 @@ where clientes.nome like "a%"
 
 -- 15. Listar todos os livros que não foram pedidos até o momento.
 
-
+select *
+from pedidos 
+left join livros livros.livro_id = pedidos.livro_id
+where pedidos.livro_id = null
 
 -- 16. Listar todos os pedidos feitos por clientes, incluindo os detalhes do livro, ordenados por data de pedido.
 
+select pedidos.pedido_id, clientes.nome, livros.titulo, pedidos.quantidade, pedidos.data_pedido
+from pedidos 
+inner join clientes on pedidos.cliente_id = clientes.cliente_id
+inner join livros on livros.livro_id = pedidos.livro_id
+
+
 -- 17. Listar todos os autores que têm livros com preços definidos, e os livros que não têm preço definido.
+
+select autores.nome, livros.preco, pedidos.quantidade
+from autores 
+full join livros on autores.autor_id = livros.autor_id
+full join pedidos on pedidos.livro_id = livros.livro_id
 
 -- 18. Listar todos os pedidos com seus respectivos clientes e livros, incluindo os pedidos sem cliente associado.
 
+select pedidos.pedido_id, clientes.nome, livros.titulo
+from clientes C
+inner join pedidos on clientes.cliente_id = pedidos.cliente_id
+inner join livros on livros.livro_id = pedidos.livro_id
+
 -- 19. Listar todos os clientes e os livros que eles pediram, incluindo os clientes que não fizeram nenhum pedido.
+
+select pedidos.pedido_id, clientes.nome, livros.titulo
+from clientes 
+right join pedidos on clientes.cliente_id = pedidos.cliente_id
+right join livros on livros.livro_id = pedidos.livro_id
 
 -- 20. Listar todos os autores que têm livros associados a pedidos feitos por clientes com nomes que terminam com a letra "a".
 
