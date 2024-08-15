@@ -1,0 +1,168 @@
+USE db_loja_eletronicos;
+
+-- 1.Registrar uma nova venda e atualizar o valor total de compras por cliente.
+
+DELIMITER //
+
+CREATE TRIGGER atualizar_valor_total_compras
+AFTER INSERT ON vendas
+FOR EACH ROW
+BEGIN
+    UPDATE clientes
+    SET valor_total_compras = valor_total_compras + NEW.valor_total
+    WHERE id_cliente = NEW.id_cliente;
+END;
+
+// DELIMITER ;
+
+-- TESTE
+
+select * from clientes;
+INSERT INTO vendas (id_produto, id_cliente, id_promocao, data_venda, quantidade, valor_total) VALUES
+(1, 1, 1, '2024-06-10', 1, 499.99);
+
+-- 2. Trigger para aplicar desconto de promoção em vendas
+
+DELIMITER //
+
+CREATE TRIGGER aplicar_desconto
+AFTER INSERT ON promocoes
+FOR EACH ROW
+BEGIN
+    UPDATE vendas
+    SET valor_total = NEW.valor_total - promocao.desconto
+    WHERE promocao.id_promocao = NEW.id_promocao;
+END;
+
+// DELIMITER ;
+
+-- 3.Atualizar o preço médio de um produto após uma nova venda.
+
+DELIMITER //
+
+CREATE TRIGGER precoMedio
+AFTER INSERT ON vendas
+FOR EACH ROW
+BEGIN
+    UPDATE produtos
+    SET preco_medio = (select avg(valor_total) from vendas where id_produto = new.id_produto)
+    WHERE id_produto = NEW.id_produto;
+END;
+
+// DELIMITER ;
+
+-- TESTE
+
+select * from produtos;
+
+insert into produtos (nome_produto, categoria, preco, quantidade_estoque) values
+("Iphone 13", "Celulares", 2999.99, 15);
+
+-- 4.Rastrear alterações no estoque de produtos e registrar uma notificação dentro de um log.
+
+DELIMITER //
+
+CREATE TRIGGER alteracao_estoque
+BEFORE UPDATE ON produtos
+FOR EACH ROW
+BEGIN
+	if (select quantidade_estoque from produtos where id_produto = new.id_produto) != new.quantidade_estoque
+    then INSERT INTO notificacoes (mensagem, data_notificacao) VALUES (concat('mudança de estoque no produto ', new.nome_produto ), now());
+    end if;
+END;
+
+// DELIMITER ;
+
+
+-- TESTE
+
+select * from produtos;
+select * from notificacoes;
+
+update produtos 
+set quantidade_estoque = 60
+where id_produto = 1;
+
+-- 5.Registrar novos clientes e gerar uma mensagem de usuário cadastrado dentro de um log.
+
+DELIMITER //
+
+CREATE TRIGGER novos_clientes
+BEFORE INSERT ON clientes
+FOR EACH ROW
+BEGIN
+	INSERT INTO notificacoes (mensagem, data_notificacao) VALUES (concat('Novo usuário cadastrado | Nome: ', new.nome), now());	
+END;
+
+// DELIMITER ;
+
+-- TESTE
+
+select * from notificacoes;
+
+
+INSERT INTO clientes (nome, email, telefone, valor_total_compras) VALUES
+('Eduardo Miguel', 'eduardoMiguel@example.com', '827028043', 0);
+
+-- 6.Monitorar vendas de produtos em promoção e registrar uma notificação.
+
+DELIMITER //
+
+CREATE TRIGGER novos_clientes
+BEFORE INSERT ON clientes
+FOR EACH ROW
+BEGIN
+	INSERT INTO notifica--coes (mensagem, data_notificacao) VALUES ('novo usuário cadastrado', now());	
+END;
+
+// DELIMITER ;
+
+-- 7.Registrar produtos em falta no estoque e gerar uma notificação.
+
+DELIMITER //
+
+CREATE TRIGGER falta_estoque
+BEFORE UPDATE ON produtos
+FOR EACH ROW
+BEGIN
+	if(select quantidade_estoque from produtos where id_produto = new.id_produto)<= 0
+	then INSERT INTO notificacoes (mensagem, data_notificacao) VALUES ('produto em falta', now());	
+    end if;
+END;
+
+// DELIMITER ;
+
+-- 8.Atualizar o valor total de vendas de um produto após uma nova venda.
+
+DELIMITER //
+
+ALTER TABLE produtos
+ADD COLUMN total_vendas float;
+
+CREATE TRIGGER totalVendas_produto
+BEFORE UPDATE ON produtos
+FOR EACH ROW
+BEGIN
+	set total_vendas = total_vendas + new.preco
+    where id_produto = new.id_produto;
+END;
+
+// DELIMITER ;
+
+
+-- 9.Rastrear alterações no valor de produtos e registrar uma notificação.
+
+DELIMITER //
+
+CREATE TRIGGER alteracao_valor
+BEFORE UPDATE ON produtos
+FOR EACH ROW
+BEGIN
+
+	if(select preco from produtos where id_produto = new.id_produto) != new.preco
+	then INSERT INTO notificacoes (mensagem, data_notificacao) VALUES ('alteração de valor', now());	
+    end if;
+	
+END;
+
+// DELIMITER ;
